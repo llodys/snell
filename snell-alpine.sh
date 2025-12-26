@@ -128,7 +128,7 @@ get_snell_version() {
 get_snell_download_url() {
     local arch=$(uname -m)
     if [ "${arch}" = "x86_64" ] || [ "${arch}" = "amd64" ]; then
-        echo "https://github.com/llodys/snell/releases/download/v3/alpine-snell-server-v3.0.0-linux-amd64.zip"
+        echo "https://github.com/llodys/snell/releases/download/v3/alpine-v3.0.0-linux-amd64.zip"
     else
         echo -e "${RED}错误: 此 Snell 脚本仅支持 amd64/x86_64 架构。${RESET}"
         exit 1
