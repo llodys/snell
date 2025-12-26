@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 WHITE='\033[0;37m'
 RESET='\033[0m'
 
-current_version="2.6"
+current_version="2.7"
 
 SNELL_VERSION=""
 SNELL_COMMAND=""
@@ -135,8 +135,8 @@ get_user_port() {
 
 get_user_psk() {
     echo -e "${CYAN}--------------------------------------------${RESET}"
-    echo -e "${YELLOW}PSK (预共享密钥) 设置${RESET}"
-    echo -e "1. 自动生成随机 PSK (推荐)"
+    echo -e "${YELLOW}设置 PSK${RESET}"
+    echo -e "1. 自动随机 PSK (推荐)"
     echo -e "2. 手动输入 PSK"
     printf "请输入选项 [1-2] (默认: 1): "
     read -r psk_choice
@@ -310,13 +310,18 @@ EOF
 
     chmod +x ${OPENRC_SERVICE_FILE}
 
-    echo -e "${CYAN}正在启动 Snell 服务...${RESET}"
+    echo -e "${CYAN}安装/配置完成，正在执行自动重启...${RESET}"
     rc-update add snell default
-    rc-service snell start
+    
+    rc-service snell restart 2>/dev/null
+    if [ $? -ne 0 ]; then
+        rc-service snell zap >/dev/null 2>&1
+        rc-service snell start
+    fi
 
     sleep 2
     if rc-service snell status | grep -q "started"; then
-        echo -e "${GREEN}✓ Snell 服务运行正常。${RESET}"
+        echo -e "${GREEN}✓ Snell 服务启动成功。${RESET}"
         open_port "$PORT"
         create_management_script
         show_information
