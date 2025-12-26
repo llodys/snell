@@ -58,9 +58,9 @@ ensure_packages() {
 # --- 4. 执行主逻辑 ---
 ensure_packages "curl"
 
-DEBIAN_URL="https://raw.githubusercontent.com/feecco/Snell/master/snell.sh"
-CENTOS_URL="https://raw.githubusercontent.com/feecco/Snell/master/snell-centos.sh"
-ALPINE_URL="https://raw.githubusercontent.com/feecco/Snell/master/snell-alpine.sh"
+DEBIAN_URL="https://raw.githubusercontent.com/llodys/snell/main/snell.sh"
+CENTOS_URL="https://raw.githubusercontent.com/llodys/snell/main/snell-centos.sh"
+ALPINE_URL="https://raw.githubusercontent.com/llodys/snell/main/snell-alpine.sh"
 
 main() {
   url=$1
