@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 WHITE='\033[0;37m'
 RESET='\033[0m'
 
-current_version="2.5"
+current_version="2.6"
 
 SNELL_VERSION=""
 SNELL_COMMAND=""
@@ -135,8 +135,8 @@ get_user_port() {
 
 get_user_psk() {
     echo -e "${CYAN}--------------------------------------------${RESET}"
-    echo -e "${YELLOW}设置 PSK${RESET}"
-    echo -e "1. 自动随机 PSK (推荐)"
+    echo -e "${YELLOW}PSK (预共享密钥) 设置${RESET}"
+    echo -e "1. 自动生成随机 PSK (推荐)"
     echo -e "2. 手动输入 PSK"
     printf "请输入选项 [1-2] (默认: 1): "
     read -r psk_choice
@@ -390,12 +390,21 @@ show_information() {
 restart_snell() {
     check_root
     echo -e "${YELLOW}正在重启 Snell 服务...${RESET}"
+    
     rc-service snell restart
+    
+    if [ $? -ne 0 ]; then
+        echo -e "${YELLOW}检测到服务未运行或停止失败，正在尝试强制启动...${RESET}"
+        rc-service snell zap >/dev/null 2>&1
+        rc-service snell start
+    fi
+
     sleep 2
     if rc-service snell status | grep -q "started"; then
-        echo -e "${GREEN}Snell 服务重启成功。${RESET}"
+        echo -e "${GREEN}Snell 服务重启/启动成功。${RESET}"
     else
-        echo -e "${RED}Snell 服务重启失败。${RESET}"
+        echo -e "${RED}Snell 服务操作失败。${RESET}"
+        echo -e "${YELLOW}请查看日志排查: tail /var/log/snell/snell.log${RESET}"
     fi
 }
 
